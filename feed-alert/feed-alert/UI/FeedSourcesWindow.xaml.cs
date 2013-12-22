@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.ServiceModel.Syndication;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,9 +12,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace feed_alert.UI
 {
+    using Entity;
+    using Persistence;
+    using Web;
+
     /// <summary>
     /// Interaction logic for FeedSources.xaml
     /// </summary>
@@ -21,6 +28,13 @@ namespace feed_alert.UI
         public FeedSourcesWindow()
         {
             InitializeComponent();
+
+            IList<FeedSource> sources = PersistenceFacade.LoadFeedSources();
+            foreach (FeedSource source in sources)
+            {
+                sourceList.Items.Add(new string[] { source.Name, source.Url });
+            }
+
             feedUrl.Focus();
         }
 
@@ -31,14 +45,17 @@ namespace feed_alert.UI
 
         private void delete_Click(object sender, RoutedEventArgs e)
         {
-
+            if (sourceList.SelectedIndex != -1)
+            {
+                sourceList.Items.RemoveAt(sourceList.SelectedIndex);
+            }
         }
 
         private void feedUrl_KeyUp(object sender, KeyEventArgs e)
         {
+            e.Handled = true;
             if (e.Key == Key.Enter)
             {
-                e.Handled = true;
                 AddFeedSource();
             }
         }
@@ -48,12 +65,34 @@ namespace feed_alert.UI
             string url = feedUrl.Text;
             feedUrl.Text = string.Empty;
 
-            sourceList.Items.Add(new string[] { url, CalcFeedName(url) });
+            try
+            {
+                HttpWebResponse response = WebUtility.MakeHttpRequest(url);
+                XmlReader xmlReader = XmlReader.Create(response.GetResponseStream());
+                SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
+                sourceList.Items.Add(new string[] { CalcFeedName(url), url });
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Please provide a feed source.");
+            }
         }
 
         private string CalcFeedName(string url)
         {
             return url;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            List<FeedSource> sources = PersistenceFacade.LoadFeedSources();
+            sources.Clear();
+            foreach (object o in sourceList.Items)
+            {
+                string[] sourceInfo = (string[])o;
+                FeedSource source = new FeedSource { Name = sourceInfo[0], Url = sourceInfo[1] };
+                sources.Add(source);
+            }
         }
     }
 }

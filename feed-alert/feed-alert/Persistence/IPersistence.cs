@@ -5,7 +5,10 @@
 
     interface IPersistence
     {
-        IEnumerable<FeedSource> LoadFeedSources();
-        void SaveFeedSources(IEnumerable<FeedSource> sources);
+        List<FeedSource> LoadFeedSources();
+        void SaveFeedSources(List<FeedSource> sources);
+
+        List<FeedSourceState> LoadFeedSourceStates();
+        void SaveFeedSourceStates(List<FeedSourceState> state);
     }
 }

@@ -36,7 +36,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -58,14 +61,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Entity\FeedSourceState.cs" />
     <Compile Include="Persistence\IPersistence.cs" />
-    <Compile Include="Persistence\Persistence.cs" />
+    <Compile Include="Persistence\PersistenceFacade.cs" />
     <Compile Include="Persistence\PersistenceUtility.cs" />
     <Compile Include="Persistence\XMLPersistence.cs" />
     <Compile Include="Entity\FeedSource.cs" />
     <Compile Include="UI\FeedSourcesWindow.xaml.cs">
       <DependentUpon>FeedSourcesWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\TrayIconFactory.cs" />
+    <Compile Include="Web\HttpExtensions.cs" />
+    <Compile Include="Web\WebUtility.cs" />
+    <Compile Include="Worker\Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -96,6 +104,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AppIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="datastore.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="sources.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

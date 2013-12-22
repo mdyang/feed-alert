@@ -8,14 +8,24 @@
         private static readonly string feedSourceStore = "sources.xml";
         private static readonly string datastore = "datastore.xml";
 
-        public IEnumerable<FeedSource> LoadFeedSources()
+        public List<FeedSource> LoadFeedSources()
         {
-            return PersistenceUtility.DeserializeFromXML<IEnumerable<FeedSource>>(feedSourceStore);
+            return PersistenceUtility.DeserializeFromXML<List<FeedSource>>(feedSourceStore);
         }
 
-        public void SaveFeedSources(IEnumerable<FeedSource> sources)
+        public void SaveFeedSources(List<FeedSource> sources)
         {
-            PersistenceUtility.SerializaToXML<IEnumerable<FeedSource>>(sources, feedSourceStore);
+            PersistenceUtility.SerializaToXML<List<FeedSource>>(sources, feedSourceStore);
+        }
+
+        public List<FeedSourceState> LoadFeedSourceStates()
+        {
+            return PersistenceUtility.DeserializeFromXML<List<FeedSourceState>>(datastore);
+        }
+
+        public void SaveFeedSourceStates(List<FeedSourceState> sources)
+        {
+            PersistenceUtility.SerializaToXML<List<FeedSourceState>>(sources, datastore);
         }
     }
 }

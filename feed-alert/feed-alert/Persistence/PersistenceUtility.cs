@@ -23,7 +23,7 @@ namespace feed_alert.Persistence
 
         public static T DeserializeFromXML<T>(string file)
         {
-            using (FileStream stream = new FileStream(file, FileMode.Create))
+            using (FileStream stream = new FileStream(file, FileMode.Open))
             {
                 return (T)GetSerializer(typeof(T)).ReadObject(stream);
             }
@@ -31,8 +31,9 @@ namespace feed_alert.Persistence
 
         private static DataContractSerializer GetSerializer(Type type)
         {
-            DataContractSerializer serializer = serializers[type];
-            if (serializer == null)
+            DataContractSerializer serializer;
+            
+            if (!serializers.TryGetValue(type, out serializer))
             {
                 serializer = new DataContractSerializer(type);
                 serializers[type] = serializer;
