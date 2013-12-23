@@ -1,8 +1,10 @@
 ﻿namespace feed_alert.Web
 {
     using System.IO;
-    using System.Web;
     using System.Net;
+    using System.ServiceModel.Syndication;
+    using System.Web;
+    using System.Xml;
 
     class WebUtility
     {
@@ -27,10 +29,23 @@
             }
         }
 
-        public static HttpWebResponse MakeHttpRequest(string url)
+        public static HttpWebResponse MakeHttpRequest(string url, string lastModified = null)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            if (lastModified != null)
+            {
+                request.Headers.Add("If-Modified-Since", lastModified);
+            }
+
             return (HttpWebResponse)request.GetResponse();
+        }
+
+        public static SyndicationFeed ReadFeed(HttpWebResponse response)
+        {
+            using (XmlReader xmlReader = XmlReader.Create(response.GetResponseStream()))
+            {
+                return SyndicationFeed.Load(xmlReader);
+            }
         }
     }
 }

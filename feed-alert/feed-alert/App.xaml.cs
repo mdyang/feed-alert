@@ -11,6 +11,7 @@ namespace feed_alert
     using Persistence;
     using UI;
     using Web;
+    using Worker;
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -21,14 +22,15 @@ namespace feed_alert
         {
             TrayIconUtility.TrayIcon.Visible = true;
             PersistenceFacade.LoadFeedSources();
-
+            Updater.StartUpdateLoop();
+            Notifier.StartNotifier();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             TrayIconUtility.TrayIcon.Visible = false;
             PersistenceFacade.SaveFeedSources();
-            PersistenceFacade.UpdateFeedSourceState();
+            PersistenceFacade.SaveFeedSourceState();
         }
     }
 }

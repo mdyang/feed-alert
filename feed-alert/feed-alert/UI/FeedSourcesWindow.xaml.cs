@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.ServiceModel.Syndication;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Xml;
 
 namespace feed_alert.UI
 {
@@ -29,7 +26,7 @@ namespace feed_alert.UI
         {
             InitializeComponent();
 
-            IList<FeedSource> sources = PersistenceFacade.LoadFeedSources();
+            IList<FeedSource> sources = PersistenceFacade.FeedSources;
             foreach (FeedSource source in sources)
             {
                 sourceList.Items.Add(new string[] { source.Name, source.Url });
@@ -67,9 +64,7 @@ namespace feed_alert.UI
 
             try
             {
-                HttpWebResponse response = WebUtility.MakeHttpRequest(url);
-                XmlReader xmlReader = XmlReader.Create(response.GetResponseStream());
-                SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
+                WebUtility.ReadFeed(WebUtility.MakeHttpRequest(url));
                 sourceList.Items.Add(new string[] { CalcFeedName(url), url });
             }
             catch (Exception)
@@ -85,7 +80,7 @@ namespace feed_alert.UI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            List<FeedSource> sources = PersistenceFacade.LoadFeedSources();
+            List<FeedSource> sources = PersistenceFacade.FeedSources;
             sources.Clear();
             foreach (object o in sourceList.Items)
             {
@@ -93,6 +88,8 @@ namespace feed_alert.UI
                 FeedSource source = new FeedSource { Name = sourceInfo[0], Url = sourceInfo[1] };
                 sources.Add(source);
             }
+
+            PersistenceFacade.FeedSources = sources;
         }
     }
 }

@@ -2,12 +2,28 @@
 {
     using Entity;
     using System.Collections.Generic;
+    using System.Threading;
 
     class PersistenceFacade
     {
         private static IPersistence persistence = new XMLPersistence();
         private static List<FeedSource> feedSources;
         private static IDictionary<string, FeedSourceState> feedSourceStateStore;
+
+        private static Mutex feedSourcesMutex = new Mutex();
+        private static Mutex feedSourcesStatesMutex = new Mutex();
+
+        public static List<FeedSource> FeedSources
+        {
+            get
+            {
+                return LoadFeedSources();
+            }
+            set
+            {
+                feedSources = value;
+            }
+        }
 
         public static List<FeedSource> LoadFeedSources()
         {
@@ -45,7 +61,12 @@
             return null;
         }
 
-        public static void UpdateFeedSourceState()
+        public static void UpdateFeedSourceState(string url, string lastEntry, string lastModified)
+        {
+            feedSourceStateStore[url] = new FeedSourceState { Url = url, LastEntryUrl = lastEntry, LastModifiedDate = lastModified };
+        }
+
+        public static void SaveFeedSourceState()
         {
             if (feedSourceStateStore != null)
             {

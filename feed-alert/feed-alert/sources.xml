@@ -1,1 +1,1 @@
-<ArrayOfFeedSource xmlns="http://schemas.datacontract.org/2004/07/feed_alert.Entity" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"/>
+<ArrayOfFeedSource xmlns="http://schemas.datacontract.org/2004/07/feed_alert.Entity" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"><FeedSource><Name>http://stackoverflow.com/feeds/tag?tagnames=algorithm&amp;sort=newest</Name><Url>http://stackoverflow.com/feeds/tag?tagnames=algorithm&amp;sort=newest</Url></FeedSource></ArrayOfFeedSource>
