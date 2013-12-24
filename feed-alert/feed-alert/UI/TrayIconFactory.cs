@@ -24,13 +24,20 @@ namespace feed_alert.UI
         private static NotifyIcon InitializeTrayIcon()
         {
             // Create the NotifyIcon.
-            return new NotifyIcon 
+            NotifyIcon icon = new NotifyIcon 
             { 
-                Icon = Resources.AppIcon, 
+                Icon = Resources.TrayIcon, 
                 Text = "TomatoClock is not working.",
                 ContextMenu = InitializeContextMenu()
             };
             // _notifyIcon.MouseMove += new MouseEventHandler(_notifyIcon_MouseMove);
+
+            icon.Click += (sender, e) => 
+            {
+                //new NotifyWindow(null).ShowNotification();
+            };
+
+            return icon;
         }
 
         private static ContextMenu InitializeContextMenu()

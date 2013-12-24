@@ -17,12 +17,15 @@ namespace feed_alert.Worker
 
     class Updater
     {
-        public static void StartUpdateLoop()
+        private static CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+        public static void Start()
         {
             Task.Factory.StartNew(() =>
             {
                 while (true)
                 {
+                    tokenSource.Token.ThrowIfCancellationRequested();
                     IList<FeedSource> sources = PersistenceFacade.FeedSources;
                     List<Task> tasks = new List<Task>();
                     foreach (FeedSource source in sources)
@@ -33,7 +36,12 @@ namespace feed_alert.Worker
                     Task.WhenAll(tasks).Wait();
                     Thread.Sleep(60000);
                 }
-            });
+            }, tokenSource.Token);
+        }
+
+        public static void Stop()
+        {
+            tokenSource.Cancel();
         }
 
         public static Task StartUpdateTask(string url)
