@@ -17,7 +17,8 @@ namespace feed_alert.Worker
     {
         private static ConcurrentQueue<NotificationItem> notificationQueue = new ConcurrentQueue<NotificationItem>();
         private static Semaphore empty = new Semaphore(0, int.MaxValue);
-        private static string currentUrl = null;
+
+        private static CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         public static void AddNotification(NotificationItem item)
         {
@@ -37,36 +38,28 @@ namespace feed_alert.Worker
             return null;
         }
 
-        public static void StartNotifier()
+        public static void Start()
         {
-            AutoResetEvent are = new AutoResetEvent(true);
-
-            TrayIconUtility.TrayIcon.BalloonTipClosed += (s, e) =>
-                {
-                    currentUrl = null;
-                    are.Set();
-                };
-
-            TrayIconUtility.TrayIcon.BalloonTipClicked += (s, e) =>
-            {
-                if (currentUrl != null)
-                {
-                    Process.Start(currentUrl);
-                }
-            };
-
             Task.Factory.StartNew(() =>
             {
                 while (true)
                 {
-                    are.WaitOne();
+                    tokenSource.Token.ThrowIfCancellationRequested();
                     NotificationItem item = GetOneNotification();
-                    currentUrl = item.Url;
-                    TrayIconUtility.TrayIcon.ShowBalloonTip(1000, item.Title, item.Url, ToolTipIcon.Info);
+
+                    Task.Factory.StartNew(() => { }).ContinueWith((t) =>
+                    {
+                        t.Wait();
+                        NotifyWindow.DisplayNotification(item);
+                    }, App.AppScheduler);
+                    Thread.Sleep(1000);
                 }
-            });
+            }, tokenSource.Token);
         }
 
-
+        public static void Stop()
+        {
+            tokenSource.Cancel();
+        }
     }
 }
