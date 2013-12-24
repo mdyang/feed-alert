@@ -1,2 +1,3 @@
-﻿- Feed diff, when new feed comes, decide which to notify
-- Site icon, display site icon when available
+﻿- Site icon, display site icon when available
+- Add configuration and corresponding persistence (first launch notification period, update period)
+- Add name for each feed, write auto name extractor (from url)

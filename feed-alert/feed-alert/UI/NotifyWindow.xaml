@@ -8,8 +8,8 @@
     <Grid>
         <Image x:Name="icon" HorizontalAlignment="Left" Height="96" VerticalAlignment="Top" Width="96"/>
         <Image x:Name="closeButton" HorizontalAlignment="Left" Height="16" Margin="474,8,0,0" VerticalAlignment="Top" Width="16" MouseEnter="closeButton_MouseEnter" MouseLeave="closeButton_MouseLeave" MouseLeftButtonUp="closeButton_MouseLeftButtonUp" MouseLeftButtonDown="closeButton_MouseLeftButtonDown"/>
-        <Label x:Name="title" Content="More efficient implementation for this algorithm?" HorizontalAlignment="Left" Margin="96,0,0,0" VerticalAlignment="Top" Width="378" Foreground="White" FontSize="16"/>
-        <TextBlock x:Name="summary" HorizontalAlignment="Left" Margin="101,31,0,0" TextWrapping="Wrap" Text="TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock " VerticalAlignment="Top" Height="65" Width="389"/>
+        <Label x:Name="title" Content="More efficient implementation for this algorithm?" HorizontalAlignment="Left" Margin="96,0,0,0" VerticalAlignment="Top" Width="373" Foreground="White" FontSize="16"/>
+        <TextBlock x:Name="summary" HorizontalAlignment="Left" Margin="101,31,0,0" TextWrapping="Wrap" Text="TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock TextBlock " VerticalAlignment="Top" Height="55" Width="389"/>
 
     </Grid>
 </Window>
