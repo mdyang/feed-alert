@@ -1,0 +1,2 @@
+﻿- Feed diff, when new feed comes, decide which to notify
+- Site icon, display site icon when available

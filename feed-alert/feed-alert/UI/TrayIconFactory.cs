@@ -27,7 +27,7 @@ namespace feed_alert.UI
             NotifyIcon icon = new NotifyIcon 
             { 
                 Icon = Resources.TrayIcon, 
-                Text = "TomatoClock is not working.",
+                Text = "Right click for more options.",
                 ContextMenu = InitializeContextMenu()
             };
             // _notifyIcon.MouseMove += new MouseEventHandler(_notifyIcon_MouseMove);

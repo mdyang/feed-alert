@@ -5,8 +5,8 @@
 
     class XMLPersistence: IPersistence
     {
-        private static readonly string feedSourceStore = "sources.xml";
-        private static readonly string datastore = "datastore.xml";
+        private static readonly string feedSourceStore = @"data\sources.xml";
+        private static readonly string datastore = @"data\datastore.xml";
 
         public List<FeedSource> LoadFeedSources()
         {
