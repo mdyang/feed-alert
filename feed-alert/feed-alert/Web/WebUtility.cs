@@ -30,12 +30,12 @@
             }
         }
 
-        public static HttpWebResponse MakeHttpRequest(string url, DateTime? lastModified = null)
+        public static HttpWebResponse MakeHttpRequest(string url, string lastModified = null)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
             if (lastModified != null)
             {
-                request.IfModifiedSince = lastModified.Value;
+                request.IfModifiedSince = DateTime.Parse(lastModified);
             }
 
             try

@@ -50,7 +50,7 @@ namespace feed_alert.Worker
             return Task.Factory.StartNew(() => 
             {
                 FeedSourceState state = PersistenceFacade.QueryFeedSourceState(url);
-                DateTime? lastModified = null;
+                string lastModified = null;
                 if (state != null)
                 {
                     lastModified = state.LastModifiedDate;
@@ -63,7 +63,7 @@ namespace feed_alert.Worker
                     return;
                 }
 
-                lastModified = DateTime.Parse(response.Headers["Date"]);
+                lastModified = response.Headers["Date"];
 
                 SyndicationFeed feed = WebUtility.ReadFeed(response);
                 if (feed == null)
@@ -90,7 +90,7 @@ namespace feed_alert.Worker
                     Notifier.AddNotification(NotificationItem.FromSyndicationItem(item));
                 }
 
-                PersistenceFacade.UpdateFeedSourceState(url, lastEntry, lastModified.Value);
+                PersistenceFacade.UpdateFeedSourceState(url, lastEntry, lastModified);
             });
         }
     }

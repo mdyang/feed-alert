@@ -13,6 +13,6 @@
         public string LastEntryUrl { get; set; }
 
         [DataMember]
-        public DateTime LastModifiedDate { get; set; }
+        public string LastModifiedDate { get; set; }
     }
 }

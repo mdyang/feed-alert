@@ -62,7 +62,7 @@
             return null;
         }
 
-        public static void UpdateFeedSourceState(string url, string lastEntry, DateTime lastModified)
+        public static void UpdateFeedSourceState(string url, string lastEntry, string lastModified)
         {
             feedSourceStateStore[url] = new FeedSourceState { Url = url, LastEntryUrl = lastEntry, LastModifiedDate = lastModified };
         }

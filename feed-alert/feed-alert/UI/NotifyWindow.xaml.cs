@@ -137,7 +137,7 @@ namespace feed_alert.UI
             Timer timer = new Timer();
             timer.Tick += (sender, e) =>
             {
-                Opacity -= 0.1;
+                Opacity -= 0.01;
                 if (Opacity <= 0.0)
                 {
                     timer.Stop();
@@ -220,7 +220,9 @@ namespace feed_alert.UI
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
+            fadeOutTimer.Stop();
             timeoutTimer.Stop();
+            Opacity = 1.0;
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
