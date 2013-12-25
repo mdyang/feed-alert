@@ -2,11 +2,14 @@
 {
     using Entity;
     using System.Collections.Generic;
+    using System.Deployment.Application;
+    using System.IO;
 
     class XMLPersistence: IPersistence
     {
-        private static readonly string feedSourceStore = @"data\sources.xml";
-        private static readonly string datastore = @"data\datastore.xml";
+        private static readonly string dataPath = ApplicationDeployment.IsNetworkDeployed ? ApplicationDeployment.CurrentDeployment.DataDirectory : ".";
+        private static readonly string feedSourceStore = Path.Combine(dataPath, "sources.xml");
+        private static readonly string datastore = Path.Combine(dataPath, "datastore.xml");
 
         public List<FeedSource> LoadFeedSources()
         {

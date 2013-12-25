@@ -71,10 +71,14 @@
         {
             if (feedSourceStateStore != null)
             {
+                FeedSourceState state;
                 List<FeedSourceState> sourceStates = new List<FeedSourceState>();
-                foreach (KeyValuePair<string, FeedSourceState> pair in feedSourceStateStore)
+                foreach (FeedSource source in FeedSources)
                 {
-                    sourceStates.Add(pair.Value);
+                    if (feedSourceStateStore.TryGetValue(source.Url, out state))
+                    {
+                        sourceStates.Add(state);
+                    }
                 }
 
                 SaveFeedSourceStates(sourceStates);
