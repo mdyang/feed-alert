@@ -23,18 +23,19 @@ namespace feed_alert.Worker
         {
             Task.Factory.StartNew(() =>
             {
+                List<Task> tasks = new List<Task>();
                 while (true)
                 {
                     tokenSource.Token.ThrowIfCancellationRequested();
-                    IList<FeedSource> sources = PersistenceFacade.FeedSources;
-                    List<Task> tasks = new List<Task>();
-                    foreach (FeedSource source in sources)
+                    tasks.Clear();
+                    foreach (FeedSource source in PersistenceFacade.FeedSources)
                     {
                         tasks.Add(StartUpdateTask(source.Url));
                     }
 
-                    Task.WhenAll(tasks).Wait();
-                    Thread.Sleep(60000);
+                    Task.WaitAll(tasks.ToArray());
+                    
+                    Thread.Sleep(5000);
                 }
             }, tokenSource.Token);
         }
@@ -49,7 +50,7 @@ namespace feed_alert.Worker
             return Task.Factory.StartNew(() => 
             {
                 FeedSourceState state = PersistenceFacade.QueryFeedSourceState(url);
-                string lastModified = null;
+                DateTime? lastModified = null;
                 if (state != null)
                 {
                     lastModified = state.LastModifiedDate;
@@ -57,12 +58,12 @@ namespace feed_alert.Worker
 
                 HttpWebResponse response = WebUtility.MakeHttpRequest(url, lastModified);
                 
-                if (response.StatusCode == HttpStatusCode.NotModified)
+                if (response == null)
                 {
                     return;
                 }
 
-                lastModified = response.Headers["Date"];
+                lastModified = DateTime.Parse(response.Headers["Date"]);
 
                 SyndicationFeed feed = WebUtility.ReadFeed(response);
                 if (feed == null)
@@ -72,18 +73,24 @@ namespace feed_alert.Worker
 
                 bool first = true;
                 string lastEntry = null;
+                DateTime now = DateTime.UtcNow;
                 foreach (SyndicationItem item in feed.Items)
                 {
                     if (first)
                     {
                         first = false;
-                        lastEntry = item.Links[0].Uri.ToString();
+                        lastEntry = item.Links[0].GetAbsoluteUri().ToString();
                     }
 
+                    if (now - item.PublishDate.DateTime > new TimeSpan(0, 0, 60, 0) ||
+                        (state != null && state.LastEntryUrl.Equals(item.Links[0].GetAbsoluteUri().ToString())))
+                    {
+                        break;
+                    }
                     Notifier.AddNotification(NotificationItem.FromSyndicationItem(item));
                 }
 
-                PersistenceFacade.UpdateFeedSourceState(url, lastEntry, lastModified);
+                PersistenceFacade.UpdateFeedSourceState(url, lastEntry, lastModified.Value);
             });
         }
     }

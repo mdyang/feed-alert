@@ -85,6 +85,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Entity\Config.cs" />
     <Compile Include="Entity\FeedSourceState.cs" />
     <Compile Include="Entity\NotificationItem.cs" />
     <Compile Include="Persistence\IPersistence.cs" />
@@ -123,9 +124,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <Resource Include="Resources\CloseIcon.ico" />
-    <Resource Include="Resources\NotifyIcon.ico" />
-    <Resource Include="Data\sources.xml" />
+    <None Include="Data\sources.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -168,9 +169,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\CloseIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NotifyIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="backlog.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lib\HtmlAgilityPack.dll" />
     <Resource Include="Resources\TrayIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

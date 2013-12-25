@@ -1,6 +1,7 @@
 ﻿namespace feed_alert.Persistence
 {
     using Entity;
+    using System;
     using System.Collections.Generic;
     using System.Threading;
 
@@ -61,7 +62,7 @@
             return null;
         }
 
-        public static void UpdateFeedSourceState(string url, string lastEntry, string lastModified)
+        public static void UpdateFeedSourceState(string url, string lastEntry, DateTime lastModified)
         {
             feedSourceStateStore[url] = new FeedSourceState { Url = url, LastEntryUrl = lastEntry, LastModifiedDate = lastModified };
         }

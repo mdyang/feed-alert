@@ -1,5 +1,6 @@
 ﻿namespace feed_alert.Web
 {
+    using System;
     using System.IO;
     using System.Net;
     using System.ServiceModel.Syndication;
@@ -29,15 +30,26 @@
             }
         }
 
-        public static HttpWebResponse MakeHttpRequest(string url, string lastModified = null)
+        public static HttpWebResponse MakeHttpRequest(string url, DateTime? lastModified = null)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
             if (lastModified != null)
             {
-                request.Headers.Add("If-Modified-Since", lastModified);
+                request.IfModifiedSince = lastModified.Value;
             }
 
-            return (HttpWebResponse)request.GetResponse();
+            try
+            {
+                return (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response != null && ((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotModified)
+                {
+                    return null;
+                }
+                throw ex;
+            }
         }
 
         public static SyndicationFeed ReadFeed(HttpWebResponse response)

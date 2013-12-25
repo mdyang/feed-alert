@@ -1,5 +1,6 @@
 ﻿namespace feed_alert.Entity
 {
+    using System;
     using System.Runtime.Serialization;
 
     [DataContractAttribute]
@@ -12,6 +13,6 @@
         public string LastEntryUrl { get; set; }
 
         [DataMember]
-        public string LastModifiedDate { get; set; }
+        public DateTime LastModifiedDate { get; set; }
     }
 }
