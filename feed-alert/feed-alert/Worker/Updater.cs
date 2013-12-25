@@ -35,7 +35,7 @@ namespace feed_alert.Worker
 
                     Task.WaitAll(tasks.ToArray());
                     
-                    Thread.Sleep(5000);
+                    Thread.Sleep(60000);
                 }
             }, tokenSource.Token);
         }
