@@ -30,12 +30,6 @@ namespace feed_alert.UI
                 Text = "Right click for more options.",
                 ContextMenu = InitializeContextMenu()
             };
-            // _notifyIcon.MouseMove += new MouseEventHandler(_notifyIcon_MouseMove);
-
-            icon.Click += (sender, e) => 
-            {
-                //new NotifyWindow(null).ShowNotification();
-            };
 
             return icon;
         }
@@ -52,7 +46,6 @@ namespace feed_alert.UI
 
             // Initialize menuItem
             menuItem_ManageFeedSources = new MenuItem("Manage Feed Source&s");
-            // menuItem_ManageFeedSources.Index = 0;
             menuItem_ManageFeedSources.Click += (sender, e) =>
             {
                 if (FeedSourcesWindow.SingletonInstance.IsVisible)
@@ -66,8 +59,6 @@ namespace feed_alert.UI
             menuItem_Settings = new MenuItem("S&ettings");
 
             menuItem_About = new MenuItem("A&bout");
-            // menuItem_About.Index = 1;
-            // _menuItem_About.Click += new EventHandler(_menuItem_About_Click);
 
             menuItem_Exit = new MenuItem("E&xit");
             menuItem_Exit.Index = 2;
