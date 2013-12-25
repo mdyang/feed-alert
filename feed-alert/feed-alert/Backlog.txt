@@ -1,5 +1,7 @@
 ﻿- Site icon, display site icon when available
 - Add configuration and corresponding persistence (first launch notification period, update period)
-- Add name for each feed, write auto name extractor (from url)
 - handle exception (e.g. network outage should not break program)
-- handle synchronization under concurrent context: feed list read (updater)/write (feed source window); feed source state read (query)/write (update)
+- Display publish date for new feed item
+- handle synchronization under concurrent context
+	- feed list read (updater)/write (feed source window); 
+	- feed source state read (query)/write (update)

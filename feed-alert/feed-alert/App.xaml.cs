@@ -34,6 +34,7 @@ namespace feed_alert
             appScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             TrayIconUtility.TrayIcon.Visible = true;
             PersistenceFacade.LoadFeedSources();
+            PersistenceFacade.LoadFeedSourceStateStore();
             Updater.Start();
             Notifier.Start();
         }

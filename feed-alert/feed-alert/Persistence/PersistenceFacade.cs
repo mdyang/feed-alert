@@ -36,6 +36,16 @@
             return feedSources;
         }
 
+        public static void LoadFeedSourceStateStore()
+        {
+            feedSourceStateStore = new Dictionary<string, FeedSourceState>();
+            IEnumerable<FeedSourceState> sourceStates = LoadFeedSourceStates();
+            foreach (FeedSourceState state in sourceStates)
+            {
+                feedSourceStateStore[state.Url] = state;
+            }
+        }
+
         public static void SaveFeedSources()
         {
             persistence.SaveFeedSources(feedSources);
@@ -43,16 +53,6 @@
 
         public static FeedSourceState QueryFeedSourceState(string url)
         {
-            if (feedSourceStateStore == null)
-            {
-                feedSourceStateStore = new Dictionary<string, FeedSourceState>();
-                IEnumerable<FeedSourceState> sourceStates = LoadFeedSourceStates();
-                foreach (FeedSourceState state in sourceStates)
-                {
-                    feedSourceStateStore[state.Url] = state;
-                }
-            }
-
             FeedSourceState result = null;
             if (feedSourceStateStore.TryGetValue(url, out result))
             {

@@ -29,7 +29,6 @@ namespace feed_alert.UI
         private readonly ImageSource appIcon = ToImageSource(Properties.Resources.TrayIcon);
         private readonly ImageSource notifyIcon = ToImageSource(Properties.Resources.NotifyIcon);
         private readonly ImageSource closeIcon = ToImageSource(Properties.Resources.CloseIcon);
-        private readonly ImageSource customIcon = null;
 
         private static readonly int notificationWindowHeight = 96;
         private static readonly int paddingHeight = 20;
