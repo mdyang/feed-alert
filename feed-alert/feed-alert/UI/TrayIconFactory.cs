@@ -55,7 +55,12 @@ namespace feed_alert.UI
             // menuItem_ManageFeedSources.Index = 0;
             menuItem_ManageFeedSources.Click += (sender, e) =>
             {
-                new FeedSourcesWindow().Show();
+                if (FeedSourcesWindow.SingletonInstance.IsVisible)
+                {
+                    FeedSourcesWindow.SingletonInstance.Activate();
+                    return;
+                }
+                FeedSourcesWindow.SingletonInstance.Show();
             };
 
             menuItem_Settings = new MenuItem("S&ettings");

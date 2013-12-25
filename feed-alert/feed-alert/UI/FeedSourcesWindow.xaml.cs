@@ -23,6 +23,21 @@ namespace feed_alert.UI
     /// </summary>
     public partial class FeedSourcesWindow : Window
     {
+        private static FeedSourcesWindow singletonInstance = null;
+
+        public static FeedSourcesWindow SingletonInstance
+        {
+            get
+            {
+                if (singletonInstance == null)
+                {
+                    singletonInstance = new FeedSourcesWindow();
+                }
+
+                return singletonInstance;
+            }
+        }
+
         public FeedSourcesWindow()
         {
             InitializeComponent();
@@ -142,6 +157,8 @@ namespace feed_alert.UI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            singletonInstance = null;
+
             List<FeedSource> sources = PersistenceFacade.FeedSources;
             sources.Clear();
             foreach (object o in sourceList.Items)
