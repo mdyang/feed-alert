@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -35,6 +36,19 @@ namespace feed_alert
         private static bool mutexCreated = false;
         private static Mutex mutex = new Mutex(true, @"26041D0E_E96A_436D_B1C0_E6C6BDA3CA80", out mutexCreated);
 
+        private static readonly SessionSwitchEventHandler sessionSwitchHandler = (s, e) =>
+                {
+                    switch (e.Reason)
+                    {
+                        case SessionSwitchReason.SessionLock:
+                            Notifier.Pause();
+                            break;
+                        case SessionSwitchReason.SessionUnlock:
+                            Notifier.Resume();
+                            break;
+                    }
+                };
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             // ensure single instance
@@ -50,6 +64,7 @@ namespace feed_alert
             PersistenceFacade.LoadFeedSourceStateStore();
             Updater.Start();
             Notifier.Start();
+            SystemEvents.SessionSwitch += sessionSwitchHandler;
             running = true;
         }
 
@@ -62,6 +77,7 @@ namespace feed_alert
                 Notifier.Stop();
                 PersistenceFacade.SaveFeedSources();
                 PersistenceFacade.SaveFeedSourceState();
+                SystemEvents.SessionSwitch -= sessionSwitchHandler;
             }
         }
     }

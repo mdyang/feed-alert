@@ -17,6 +17,7 @@ namespace feed_alert.Worker
     {
         private static ConcurrentQueue<NotificationItem> notificationQueue = new ConcurrentQueue<NotificationItem>();
         private static Semaphore empty = new Semaphore(0, int.MaxValue);
+        private static ManualResetEvent mre = new ManualResetEvent(true);
 
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
 
@@ -45,6 +46,7 @@ namespace feed_alert.Worker
                 while (true)
                 {
                     tokenSource.Token.ThrowIfCancellationRequested();
+                    mre.WaitOne();
                     NotificationItem item = GetOneNotification();
 
                     Task.Factory.StartNew(() => { }).ContinueWith((t) =>
@@ -60,6 +62,16 @@ namespace feed_alert.Worker
         public static void Stop()
         {
             tokenSource.Cancel();
+        }
+
+        public static void Pause()
+        {
+            mre.Reset();
+        }
+
+        public static void Resume()
+        {
+            mre.Set();
         }
     }
 }
