@@ -12,7 +12,12 @@ namespace feed_alert.Entity
     class Config
     {
         [DataMember]
-        public int UpdateInterval { get; set; }
+        public int UpdatePeriod { get; set; }
 
+        [DataMember]
+        public int RetetionPeriod { set; get; }
+
+        [DataMember]
+        public bool HoldNotifLockScreen { set; get; }
     }
 }

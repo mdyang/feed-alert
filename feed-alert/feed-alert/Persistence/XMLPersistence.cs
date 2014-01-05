@@ -10,6 +10,7 @@
         private static readonly string dataPath = ApplicationDeployment.IsNetworkDeployed ? ApplicationDeployment.CurrentDeployment.DataDirectory : ".";
         private static readonly string feedSourceStore = Path.Combine(dataPath, "sources.xml");
         private static readonly string datastore = Path.Combine(dataPath, "datastore.xml");
+        private static readonly string configstore = Path.Combine(dataPath, "config.xml");
 
         public List<FeedSource> LoadFeedSources()
         {
@@ -29,6 +30,16 @@
         public void SaveFeedSourceStates(List<FeedSourceState> sources)
         {
             PersistenceUtility.SerializaToXML<List<FeedSourceState>>(sources, datastore);
+        }
+
+        public Config LoadConfig()
+        {
+            return PersistenceUtility.DeserializeFromXML<Config>(configstore);
+        }
+
+        public void SaveConfig(Config config)
+        {
+            PersistenceUtility.SerializaToXML<Config>(config, configstore);
         }
     }
 }

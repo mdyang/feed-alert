@@ -10,5 +10,8 @@
 
         List<FeedSourceState> LoadFeedSourceStates();
         void SaveFeedSourceStates(List<FeedSourceState> state);
+
+        Config LoadConfig();
+        void SaveConfig(Config config);
     }
 }

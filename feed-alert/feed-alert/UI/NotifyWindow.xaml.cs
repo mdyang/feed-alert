@@ -30,7 +30,7 @@ namespace feed_alert.UI
         private readonly ImageSource notifyIcon = ToImageSource(Properties.Resources.NotifyIcon);
         private readonly ImageSource closeIcon = ToImageSource(Properties.Resources.CloseIcon);
 
-        private static readonly int notificationWindowHeight = 96;
+        private static readonly int notificationWindowHeight = 116;
         private static readonly int paddingHeight = 20;
         private static readonly int timeout = 3000;
 
@@ -48,25 +48,41 @@ namespace feed_alert.UI
 
         //SortedSet<>
 
-        public NotifyWindow(NotificationItem item)
+        public NotifyWindow(NotificationItem item, int slot)
         {
             InitializeComponent();
             uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             icon.Source = notifyIcon;
             closeButton.Source = closeIcon;
             this.item = item;
+            this.slot = slot;
 
             title.Content = item.Title;
             summary.Text = item.Text;
+            timeLabel.Content = GetTimeLabel();
 
             fadeInTimer = BuildFadeInTimer();
             fadeOutTimer = BuildFadeOutTimer();
             timeoutTimer = BuildTimeoutTimer();
+
+            Closed += (sender, e) =>
+            {
+            };
         }
 
         public static void DisplayNotification(NotificationItem item)
         {
-            new NotifyWindow(item).ShowNotification();
+            int slot = PopFirstElement();
+            
+            Task.Factory.StartNew(() => { }).ContinueWith((t) =>
+            {
+                new NotifyWindow(item, slot)
+                {
+                    Left = 0,
+                    Top = slot,
+                    Opacity = 0,
+                }.FadeIn();
+            }, App.AppScheduler);
         }
 
         private static ImageSource ToImageSource(Icon icon)
@@ -87,11 +103,6 @@ namespace feed_alert.UI
             closeButton.Source = closeIcon;
         }
 
-        private void text_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
-
         private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (item.Url != null)
@@ -102,33 +113,10 @@ namespace feed_alert.UI
             CloseWindow();
         }
 
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
         private void closeButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
             CloseWindow();
-        }
-
-        private void closeButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        public void ShowNotification()
-        {
-            semaphore.WaitOne();
-            mutex.WaitOne();
-            slot = PopFirstElement();
-            mutex.ReleaseMutex();
-            Left = 0;
-            Top = slot;
-            Opacity = 0;
-            Show();
-            fadeInTimer.Start();
         }
 
         private Timer BuildFadeOutTimer()
@@ -183,12 +171,15 @@ namespace feed_alert.UI
             int current = paddingHeight;
             int i = 0;
             mutex.WaitOne();
+            
             do
             {
                 result.Add(current);
                 semaphore.Release();
                 current += slotHeight;
-            } while (++i < slots);
+            }
+            while (++i < slots);
+            
             mutex.ReleaseMutex();
 
             return result;
@@ -196,25 +187,19 @@ namespace feed_alert.UI
 
         private void CloseWindow()
         {
-            mutex.WaitOne();
-            displaySlots.Add(slot);
-            mutex.ReleaseMutex();
-            semaphore.Release();
+            ReturnSlot();
             Close();
         }
 
-        private int PopFirstElement()
+        private static int PopFirstElement()
         {
-            int ret = paddingHeight;
-            foreach (int slot in displaySlots)
-            {
-                ret = slot;
-                break;
-            }
-
+            semaphore.WaitOne();
+            mutex.WaitOne();
+            int ret = displaySlots.FirstOrDefault();
             displaySlots.Remove(ret);
+            mutex.ReleaseMutex();
 
-            return ret; ;
+            return ret;
         }
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)
@@ -227,6 +212,41 @@ namespace feed_alert.UI
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
             timeoutTimer.Start();
+        }
+
+        private string GetTimeLabel()
+        {
+            TimeSpan ts = DateTime.UtcNow - item.PublishDate;
+
+            if (ts.Hours > 0)
+            {
+                if (ts.Seconds > 0)
+                {
+                    return string.Format("{0}h {1}m ago", ts.Hours, ts.Seconds);
+                }
+                return string.Format("{0}h ago", ts.Hours);
+            }
+
+            if (ts.Minutes < 5)
+            {
+                return string.Format("just now");
+            }
+
+            return string.Format("{0}m ago", ts.Minutes);
+        }
+
+        private void FadeIn()
+        {
+            Show();
+            fadeInTimer.Start();
+        }
+
+        private void ReturnSlot()
+        {
+            mutex.WaitOne();
+            displaySlots.Add(slot);
+            mutex.ReleaseMutex();
+            semaphore.Release();
         }
     }
 }

@@ -1,0 +1,8 @@
+﻿<Window x:Class="feed_alert.UI.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About feed-alert" Height="300" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        
+    </Grid>
+</Window>

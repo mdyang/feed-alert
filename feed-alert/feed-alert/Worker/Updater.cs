@@ -33,9 +33,14 @@ namespace feed_alert.Worker
                         tasks.Add(StartUpdateTask(source.Url));
                     }
 
-                    Task.WaitAll(tasks.ToArray());
+                    // ignore failures
+                    try
+                    {
+                        Task.WaitAll(tasks.ToArray());
+                    }
+                    catch (Exception) { }
                     
-                    Thread.Sleep(60000);
+                    Thread.Sleep(PersistenceFacade.LoadConfig().UpdatePeriod * 60000);
                 }
             }, tokenSource.Token);
         }
@@ -82,7 +87,7 @@ namespace feed_alert.Worker
                         lastEntry = item.Links[0].GetAbsoluteUri().ToString();
                     }
 
-                    if (now - item.PublishDate.DateTime > new TimeSpan(0, 0, 60, 0) ||
+                    if (now - item.PublishDate.DateTime > new TimeSpan(PersistenceFacade.LoadConfig().RetetionPeriod, 0, 0) ||
                         (state != null && state.LastEntryUrl.Equals(item.Links[0].GetAbsoluteUri().ToString())))
                     {
                         break;

@@ -11,6 +11,7 @@ namespace feed_alert.Worker
     using Entity;
     using System.Threading;
     using System.Windows.Forms;
+    using Persistence;
     using UI;
 
     class Notifier
@@ -48,13 +49,23 @@ namespace feed_alert.Worker
                     tokenSource.Token.ThrowIfCancellationRequested();
                     mre.WaitOne();
                     NotificationItem item = GetOneNotification();
+                    bool display = true;
 
                     Task.Factory.StartNew(() => { }).ContinueWith((t) =>
                     {
                         t.Wait();
-                        NotifyWindow.DisplayNotification(item);
-                    }, App.AppScheduler);
-                    Thread.Sleep(1000);
+
+                        // if the notification item is too old, discard it
+                        if (display = DateTime.UtcNow - item.PublishDate < new TimeSpan(PersistenceFacade.LoadConfig().RetetionPeriod, 0, 0))
+                        {
+                            NotifyWindow.DisplayNotification(item);
+                        }
+                    });
+
+                    if (display)
+                    {
+                        Thread.Sleep(1000);
+                    }
                 }
             }, tokenSource.Token);
         }

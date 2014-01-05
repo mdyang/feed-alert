@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace feed_alert.UI
 {
@@ -12,6 +13,7 @@ namespace feed_alert.UI
     class TrayIconUtility
     {
         private static readonly NotifyIcon trayIcon = InitializeTrayIcon();
+        private static Window window = null;
 
         public static NotifyIcon TrayIcon
         {
@@ -46,22 +48,24 @@ namespace feed_alert.UI
 
             // Initialize menuItem
             menuItem_ManageFeedSources = new MenuItem("Manage Feed Source&s");
-            menuItem_ManageFeedSources.Click += (sender, e) =>
+            menuItem_ManageFeedSources.Click += (s, e) =>
             {
-                if (FeedSourcesWindow.SingletonInstance.IsVisible)
-                {
-                    FeedSourcesWindow.SingletonInstance.Activate();
-                    return;
-                }
-                FeedSourcesWindow.SingletonInstance.Show();
+                HandleMenuOpenWindow(WindowType.FeedSourceManagement);
             };
 
             menuItem_Settings = new MenuItem("S&ettings");
+            menuItem_Settings.Click += (s, e) =>
+            {
+                HandleMenuOpenWindow(WindowType.Settings);
+            };
 
             menuItem_About = new MenuItem("A&bout");
+            menuItem_About.Click += (s, e) =>
+            {
+                HandleMenuOpenWindow(WindowType.About);
+            };
 
             menuItem_Exit = new MenuItem("E&xit");
-            menuItem_Exit.Index = 2;
             menuItem_Exit.Click += (sender, e) =>
             {
                 App.Current.Shutdown();
@@ -75,6 +79,44 @@ namespace feed_alert.UI
             menu.MenuItems.Add(menuItem_Exit);
 
             return menu;
+        }
+
+        private static void HandleMenuOpenWindow(WindowType type)
+        {
+            if (window == null)
+            {
+                window = BuildWindow(type);
+                window.Closing += (_s, _e) =>
+                {
+                    window = null;
+                };
+                window.Show();
+                return;
+            }
+
+            window.Activate();
+        }
+
+        private static Window BuildWindow(WindowType type)
+        {
+            switch (type)
+            {
+                case WindowType.FeedSourceManagement:
+                    return new FeedSourcesWindow();
+                case WindowType.Settings:
+                    return new ConfigWindow();
+                case WindowType.About:
+                    return new AboutWindow();
+            }
+
+            return null;
+        }
+
+        private enum WindowType
+        {
+            FeedSourceManagement,
+            Settings,
+            About
         }
     }
 }

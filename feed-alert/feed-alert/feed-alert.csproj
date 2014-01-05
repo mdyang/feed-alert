@@ -57,7 +57,7 @@
     <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>85E875DD176066C24946B6F2A966E5461B30B80D</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BC6160CF56C945062DFBFBDBAAC3F667FDB118D4</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>feed-alert_TemporaryKey.pfx</ManifestKeyFile>
@@ -109,6 +109,12 @@
     <Compile Include="Persistence\PersistenceUtility.cs" />
     <Compile Include="Persistence\XMLPersistence.cs" />
     <Compile Include="Entity\FeedSource.cs" />
+    <Compile Include="UI\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ConfigWindow.xaml.cs">
+      <DependentUpon>ConfigWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\FeedSourcesWindow.xaml.cs">
       <DependentUpon>FeedSourcesWindow.xaml</DependentUpon>
     </Compile>
@@ -151,6 +157,14 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="UI\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\FeedSourcesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

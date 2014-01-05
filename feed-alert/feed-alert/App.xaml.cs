@@ -60,8 +60,7 @@ namespace feed_alert
 
             appScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             TrayIconUtility.TrayIcon.Visible = true;
-            PersistenceFacade.LoadFeedSources();
-            PersistenceFacade.LoadFeedSourceStateStore();
+            PersistenceFacade.Load();
             Updater.Start();
             Notifier.Start();
             SystemEvents.SessionSwitch += sessionSwitchHandler;
@@ -75,8 +74,7 @@ namespace feed_alert
                 TrayIconUtility.TrayIcon.Visible = false;
                 Updater.Stop();
                 Notifier.Stop();
-                PersistenceFacade.SaveFeedSources();
-                PersistenceFacade.SaveFeedSourceState();
+                PersistenceFacade.Save();
                 SystemEvents.SessionSwitch -= sessionSwitchHandler;
             }
         }

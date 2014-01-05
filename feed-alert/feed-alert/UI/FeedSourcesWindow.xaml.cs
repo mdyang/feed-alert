@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ContextMenu = System.Windows.Forms.ContextMenu;
 
 namespace feed_alert.UI
 {
@@ -23,24 +24,23 @@ namespace feed_alert.UI
     /// </summary>
     public partial class FeedSourcesWindow : Window
     {
-        private static FeedSourcesWindow singletonInstance = null;
-
-        public static FeedSourcesWindow SingletonInstance
-        {
-            get
-            {
-                if (singletonInstance == null)
-                {
-                    singletonInstance = new FeedSourcesWindow();
-                }
-
-                return singletonInstance;
-            }
-        }
-
         public FeedSourcesWindow()
         {
             InitializeComponent();
+
+            Closing += (s, e) =>
+            {
+                List<FeedSource> _sources = PersistenceFacade.FeedSources;
+                _sources.Clear();
+                foreach (object o in sourceList.Items)
+                {
+                    string[] sourceInfo = (string[])o;
+                    FeedSource source = new FeedSource { Name = sourceInfo[0], Url = sourceInfo[1] };
+                    _sources.Add(source);
+                }
+
+                PersistenceFacade.FeedSources = _sources;
+            };
 
             IList<FeedSource> sources = PersistenceFacade.FeedSources;
             foreach (FeedSource source in sources)
@@ -153,22 +153,6 @@ namespace feed_alert.UI
             }
 
             return null;
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            singletonInstance = null;
-
-            List<FeedSource> sources = PersistenceFacade.FeedSources;
-            sources.Clear();
-            foreach (object o in sourceList.Items)
-            {
-                string[] sourceInfo = (string[])o;
-                FeedSource source = new FeedSource { Name = sourceInfo[0], Url = sourceInfo[1] };
-                sources.Add(source);
-            }
-
-            PersistenceFacade.FeedSources = sources;
         }
     }
 }

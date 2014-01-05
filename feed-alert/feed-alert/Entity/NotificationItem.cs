@@ -13,6 +13,7 @@ namespace feed_alert.Entity
         public string Title { get; set; }
         public string Text { get; set; }
         public string Url { get; set; }
+        public DateTime PublishDate { get; set; }
 
         private static readonly int maxLength = 140;
 
@@ -22,7 +23,8 @@ namespace feed_alert.Entity
             {
                 Title = item.Title.Text,
                 Text = ExtractSummaryText(item),
-                Url = item.Links[0].Uri.ToString()
+                Url = item.Links[0].Uri.ToString(),
+                PublishDate = item.PublishDate.UtcDateTime,
             };
         }
 

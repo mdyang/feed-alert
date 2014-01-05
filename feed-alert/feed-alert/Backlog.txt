@@ -1,10 +1,4 @@
 ﻿- Site icon, display site icon when available
-- Add configuration and corresponding persistence
-	-notification retention period
-	-update period
-	-hold notification when screen is locked
-- handle exception (e.g. network outage should not break program)
-- Display publish date for new feed item
 - handle synchronization under concurrent context
 	- feed list read (updater)/write (feed source window); 
 	- feed source state read (query)/write (update)

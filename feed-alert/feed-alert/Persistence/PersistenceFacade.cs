@@ -8,6 +8,7 @@
     class PersistenceFacade
     {
         private static IPersistence persistence = new XMLPersistence();
+        private static Config config;
         private static List<FeedSource> feedSources;
         private static IDictionary<string, FeedSourceState> feedSourceStateStore;
 
@@ -85,6 +86,20 @@
             }
         }
 
+        public static void Load()
+        {
+            LoadFeedSources();
+            LoadFeedSourceStateStore();
+            LoadConfig();
+        }
+
+        public static void Save()
+        {
+            SaveFeedSources();
+            SaveFeedSourceState();
+            SaveConfig();
+        }
+
         private static List<FeedSourceState> LoadFeedSourceStates()
         {
             return persistence.LoadFeedSourceStates();
@@ -93,6 +108,33 @@
         private static void SaveFeedSourceStates(List<FeedSourceState> states)
         {
             persistence.SaveFeedSourceStates(states);
+        }
+
+        public static Config LoadConfig()
+        {
+            if (config == null)
+            {
+                try
+                {
+                    config = persistence.LoadConfig();
+                }
+                catch (Exception)
+                {
+                    // if there is still no config file, create one
+                    config = new Config { UpdatePeriod = 1, RetetionPeriod = 6, HoldNotifLockScreen = true };
+                }
+            }
+            return config;
+        }
+
+        public static void SaveConfig()
+        {
+            persistence.SaveConfig(config);
+        }
+
+        public static void UpdateConfig(Config conf)
+        {
+            config = conf;
         }
     }
 }
