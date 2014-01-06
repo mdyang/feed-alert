@@ -15,7 +15,7 @@
     <WarningLevel>4</WarningLevel>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>C:\Users\meyang\Source\Repos\soft-distributions\feed-alert\</PublishUrl>
+    <PublishUrl>C:\Users\Mengdong\Source\Repos\soft-distrib\feed-alert\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://github.com/mdyang/soft-distrib/raw/master/feed-alert/</InstallUrl>
-    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -121,7 +121,7 @@
     <Compile Include="UI\NotifyWindow.xaml.cs">
       <DependentUpon>NotifyWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\TrayIconFactory.cs" />
+    <Compile Include="UI\TrayIconUtility.cs" />
     <Compile Include="Web\HttpExtensions.cs" />
     <Compile Include="Web\WebUtility.cs" />
     <Compile Include="Worker\Notifier.cs" />
@@ -146,6 +146,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <Content Include="config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="sources.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

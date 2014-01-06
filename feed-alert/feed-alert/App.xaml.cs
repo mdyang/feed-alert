@@ -38,14 +38,17 @@ namespace feed_alert
 
         private static readonly SessionSwitchEventHandler sessionSwitchHandler = (s, e) =>
                 {
-                    switch (e.Reason)
+                    if (PersistenceFacade.LoadConfig().HoldNotifLockScreen)
                     {
-                        case SessionSwitchReason.SessionLock:
-                            Notifier.Pause();
-                            break;
-                        case SessionSwitchReason.SessionUnlock:
-                            Notifier.Resume();
-                            break;
+                        switch (e.Reason)
+                        {
+                            case SessionSwitchReason.SessionLock:
+                                Notifier.Pause();
+                                break;
+                            case SessionSwitchReason.SessionUnlock:
+                                Notifier.Resume();
+                                break;
+                        }
                     }
                 };
 

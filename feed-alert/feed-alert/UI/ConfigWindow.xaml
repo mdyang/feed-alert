@@ -1,0 +1,15 @@
+﻿<Window x:Class="feed_alert.UI.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings" Height="142" Width="450" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <CheckBox x:Name="holdNotifLockScreen" Content="Hold notifications when screen is locked, and display after unlock. " HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top"/>
+        <Label Content="Do not display notifications older than" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
+        <Label Content="hours." HorizontalAlignment="Left" Margin="372,40,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="retentionPeriod" HorizontalAlignment="Left" Height="20" Margin="296,45,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="56" />
+        <Label Content="Check for update every" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="updatePeriod" HorizontalAlignment="Left" Height="20" Margin="296,15,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="56"/>
+        <Label Content="minutes." HorizontalAlignment="Left" Margin="372,10,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

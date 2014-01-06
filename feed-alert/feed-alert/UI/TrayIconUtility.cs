@@ -1,9 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace feed_alert.UI
 {
@@ -12,6 +16,8 @@ namespace feed_alert.UI
 
     class TrayIconUtility
     {
+        public static readonly ImageSource notifyIconImgSource = TrayIconUtility.ToImageSource(Properties.Resources.NotifyIcon);
+
         private static readonly NotifyIcon trayIcon = InitializeTrayIcon();
         private static Window window = null;
 
@@ -117,6 +123,14 @@ namespace feed_alert.UI
             FeedSourceManagement,
             Settings,
             About
+        }
+
+        public static ImageSource ToImageSource(Icon icon)
+        {
+            return Imaging.CreateBitmapSourceFromHIcon(
+               icon.Handle,
+               Int32Rect.Empty,
+               BitmapSizeOptions.FromEmptyOptions());
         }
     }
 }

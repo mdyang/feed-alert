@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,12 @@ namespace feed_alert.UI
         public AboutWindow()
         {
             InitializeComponent();
+
+            icon.Source = TrayIconUtility.notifyIconImgSource;
+            linkButton.Click += (sender, e) =>
+            {
+                Process.Start(Properties.Resources.HomePage);
+            };
         }
     }
 }

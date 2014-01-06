@@ -12,10 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace feed_alert.UI
 {
@@ -26,9 +23,8 @@ namespace feed_alert.UI
     /// </summary>
     public partial class NotifyWindow : Window
     {
-        private readonly ImageSource appIcon = ToImageSource(Properties.Resources.TrayIcon);
-        private readonly ImageSource notifyIcon = ToImageSource(Properties.Resources.NotifyIcon);
-        private readonly ImageSource closeIcon = ToImageSource(Properties.Resources.CloseIcon);
+        private static readonly ImageSource appIcon = TrayIconUtility.ToImageSource(Properties.Resources.TrayIcon);
+        private static readonly ImageSource closeIcon = TrayIconUtility.ToImageSource(Properties.Resources.CloseIcon);
 
         private static readonly int notificationWindowHeight = 116;
         private static readonly int paddingHeight = 20;
@@ -48,11 +44,13 @@ namespace feed_alert.UI
 
         //SortedSet<>
 
+        private NotifyWindow() { }
+
         public NotifyWindow(NotificationItem item, int slot)
         {
             InitializeComponent();
             uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            icon.Source = notifyIcon;
+            icon.Source = TrayIconUtility.notifyIconImgSource;
             closeButton.Source = closeIcon;
             this.item = item;
             this.slot = slot;
@@ -83,14 +81,6 @@ namespace feed_alert.UI
                     Opacity = 0,
                 }.FadeIn();
             }, App.AppScheduler);
-        }
-
-        private static ImageSource ToImageSource(Icon icon)
-        {
-            return Imaging.CreateBitmapSourceFromHIcon(
-               icon.Handle,
-               Int32Rect.Empty,
-               BitmapSizeOptions.FromEmptyOptions());
         }
 
         private void closeButton_MouseEnter(object sender, MouseEventArgs e)
